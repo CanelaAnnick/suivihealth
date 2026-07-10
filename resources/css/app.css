@@ -1,0 +1,10 @@
+[x-cloak] { display: none !important; }
+
+html, body {
+    overflow-x: hidden;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
