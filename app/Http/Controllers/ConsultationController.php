@@ -17,14 +17,28 @@ class ConsultationController extends Controller
         return view('patient.consultation.choix');
     }
 
-    public function generalistes()
+    public function generalistes(Request $request)
     {
-        $medecins = Medecin::with('user')
+        $query = Medecin::with('user')
             ->where('type', 'generaliste')
-            ->where('statut', 'actif')
-            ->get();
-
-        return view('patient.consultation.generalistes', compact('medecins'));
+            ->where('statut', 'actif');
+    
+        if ($request->filled('region')) {
+            $query->where('region', $request->region);
+        }
+        if ($request->filled('hopital')) {
+            $query->where('hopital', $request->hopital);
+        }
+    
+        $medecins = $query->get();
+    
+        $hopitaux = Medecin::where('type', 'generaliste')->distinct()->pluck('hopital')->filter();
+    
+        return view('patient.consultation.generalistes', [
+            'medecins' => $medecins,
+            'regions' => $this->regions,
+            'hopitaux' => $hopitaux,
+        ]);
     }
 
     public function specialites()

@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 @section('title', 'Dossier médical — SuiviHealth')
+@section('page-title', 'Mon dossier médical')
 
 @section('sidebar')
     <a href="{{ route('patient.dashboard') }}" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-navy-800 hover:text-white">Accueil</a>

@@ -14,20 +14,10 @@ export default {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                navy: {
-                    900: '#0B2A4A',
-                    800: '#0F3556',
-                    700: '#154269',
-                },
-                teal: {
-                    600: '#1C6E8C',
-                    500: '#2B87A8',
-                },
-                coral: {
-                    500: '#FF6F61',
-                    600: '#E8543F',
-                },
-                mist: '#EAF4F8',
+                navy: { 900: '#0B2A4A', 800: '#0F3556', 700: '#154269' },
+                teal: { 600: '#1C6E8C', 500: '#2B87A8' },
+                coral: { 500: '#FF6F61', 600: '#E8543F' },
+                mist: '#F7F9FB',
             },
         },
     },

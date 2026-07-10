@@ -1,10 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 [x-cloak] { display: none !important; }
 
 html, body {
     overflow-x: hidden;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+}

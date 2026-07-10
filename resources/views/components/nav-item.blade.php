@@ -1,8 +1,8 @@
 @props(['route', 'icon', 'active' => false])
 
 <a href="{{ $route }}" @class([
-    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition',
-    'bg-white/10 text-white' => $active,
+    'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition',
+    'bg-white text-navy-900' => $active,
     'text-slate-400 hover:bg-white/5 hover:text-white' => ! $active,
 ])>
     <span class="shrink-0">{!! $icon !!}</span>
