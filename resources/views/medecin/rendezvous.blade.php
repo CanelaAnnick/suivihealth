@@ -66,4 +66,26 @@
     </x-section-card>
 </div>
 
+<div class="mt-5">
+    <x-section-card title="Historique">
+        @forelse ($historique as $rdv)
+            <div class="flex items-center justify-between px-5 py-3.5 {{ !$loop->last ? 'border-b border-slate-100' : '' }}">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[11px] font-semibold shrink-0">
+                        {{ strtoupper(substr($rdv->patient->user->name, 0, 2)) }}
+                    </div>
+                    <div>
+                        <p class="text-[13px] font-medium text-slate-900">{{ $rdv->patient->user->name }}</p>
+                        <p class="text-[12px] text-slate-400 mt-0.5">{{ ucfirst($rdv->mode) }} · {{ $rdv->updated_at->format('d/m/Y à H:i') }}</p>
+                    </div>
+                </div>
+                <span @class(['text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0', 'bg-slate-100 text-slate-600' => $rdv->statut === 'termine', 'bg-red-50 text-red-700' => $rdv->statut === 'annule'])>
+                    {{ $rdv->statut === 'termine' ? 'Terminée' : 'Annulée' }}
+                </span>
+            </div>
+        @empty
+            <div class="px-5 py-10 text-center"><p class="text-[13px] text-slate-400">Aucun historique pour le moment.</p></div>
+        @endforelse
+    </x-section-card>
+</div>
 @endsection

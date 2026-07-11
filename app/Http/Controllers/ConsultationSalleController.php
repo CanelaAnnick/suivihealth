@@ -48,10 +48,27 @@ class ConsultationSalleController extends Controller
 
         return response()->json($message->load('sender'));
     }
+
     public function statut(RendezVous $rdv)
     {
         $this->autoriser($rdv);
-    
+
         return response()->json(['statut' => $rdv->statut]);
+    }
+    public function terminer(RendezVous $rdv)
+    {
+        $this->autoriser($rdv);
+    
+        $rdv->update(['statut' => 'termine']);
+    
+        $autreUserId = auth()->user()->role === 'patient' ? $rdv->medecin->user_id : $rdv->patient->user_id;
+    
+        \App\Models\Notification::create([
+            'user_id' => $autreUserId,
+            'titre' => 'Consultation terminée',
+            'message' => 'La consultation a été clôturée.',
+        ]);
+    
+        return response()->json(['success' => true]);
     }
 }

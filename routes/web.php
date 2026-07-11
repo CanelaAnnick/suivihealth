@@ -19,6 +19,7 @@ use App\Http\Controllers\MedecinPatientController;
 use App\Http\Controllers\MedecinOrdonnanceController;
 use App\Http\Controllers\AdminPaiementController;
 use App\Http\Controllers\UrgenceController;
+use App\Http\Controllers\SuperAdminStatistiquesController;
 
 
 
@@ -106,6 +107,7 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('supe
     Route::get('/hopitaux', fn () => view('dashboards.placeholder', ['title' => 'Hôpitaux', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'hopitaux']))->name('hopitaux.index');
     Route::get('/administrateurs', fn () => view('dashboards.placeholder', ['title' => 'Administrateurs', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'admins']))->name('admins.index');
     Route::get('/statistiques', [AdminDashboardController::class, 'statistiques'])->name('statistiques');
+    Route::get('/statistiques', [SuperAdminStatistiquesController::class, 'index'])->name('statistiques');
 });
 
 Route::middleware('auth')->group(function () {
@@ -128,6 +130,7 @@ Route::middleware('auth')->group(function () {
         return view('salle.attente', compact('rdv'));
     })->name('salle.attente');
 
+    Route::post('/salle/{rdv}/terminer', [ConsultationSalleController::class, 'terminer'])->name('salle.terminer');
 });
 
 require __DIR__.'/auth.php';
