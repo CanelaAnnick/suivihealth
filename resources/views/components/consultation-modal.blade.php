@@ -102,7 +102,9 @@
                     <p class="text-slate-500 text-[13px] leading-relaxed mb-5">
                         Votre <span x-text="flow==='rdv' ? 'rendez-vous' : 'consultation'"></span> avec <span x-text="nom"></span> est confirmé<span x-show="date"> pour le <span x-text="date"></span> à <span x-text="heure"></span></span>.
                     </p>
-                    <button type="button" @click="close(); window.location.reload()" class="bg-navy-900 text-white text-[13px] font-medium px-5 py-2.5 rounded-lg hover:bg-navy-800 transition">Fermer</button>
+                    <button type="button" @click="close()" class="bg-navy-900 text-white text-[13px] font-medium px-5 py-2.5 rounded-lg hover:bg-navy-800 transition">
+                        <span x-text="flow === 'consulter' ? 'Rejoindre maintenant' : 'Fermer'"></span>
+                    </button>
                 </div>
             </template>
 
@@ -124,7 +126,12 @@ document.addEventListener('alpine:init', () => {
             this.step = 'mode'; this.mode = null; this.date = ''; this.heure = null; this.paiement = null; this.error = null; this.rdvId = null;
             this.visible = true;
         },
-        close() { this.visible = false; },
+        close() {
+            this.visible = false;
+            if (this.flow === 'consulter' && this.step === 'success' && this.rdvId) {
+                window.location.href = '/salle/' + this.rdvId;
+            }
+        },
         csrf() { return document.querySelector('meta[name="csrf-token"]').content; },
         next() {
             if (this.step === 'mode') {

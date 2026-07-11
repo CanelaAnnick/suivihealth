@@ -13,6 +13,9 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\SuperAdminDashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientProfilController;
+use App\Http\Controllers\ConsultationSalleController;
+use App\Http\Controllers\MedecinRendezVousController;
+
 
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -65,7 +68,7 @@ Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')
     Route::get('/dashboard', [MedecinDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/patients', fn () => view('dashboards.placeholder', ['title' => 'Mes patients', 'roleSidebar' => 'sidebar-medecin', 'active' => 'patients']))->name('patients');
-    Route::get('/rendez-vous', fn () => view('dashboards.placeholder', ['title' => 'Rendez-vous', 'roleSidebar' => 'sidebar-medecin', 'active' => 'rdv']))->name('rendezvous');
+    Route::get('/rendez-vous', [MedecinRendezVousController::class, 'index'])->name('rendezvous');
     Route::get('/ordonnances', fn () => view('dashboards.placeholder', ['title' => 'Ordonnances', 'roleSidebar' => 'sidebar-medecin', 'active' => 'ordonnances']))->name('ordonnances');
 });
 
@@ -86,6 +89,7 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('supe
 });
 
 Route::middleware('auth')->group(function () {
+    
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -93,6 +97,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{notification}/lu', [NotificationController::class, 'marquerLu'])->name('notifications.lu');
     Route::post('/notifications/tout-lu', [NotificationController::class, 'marquerToutLu'])->name('notifications.tout-lu');
+
+    Route::get('/salle/{rdv}', [ConsultationSalleController::class, 'show'])->name('salle.show');
+    Route::get('/salle/{rdv}/messages', [ConsultationSalleController::class, 'getMessages'])->name('salle.messages.index');
+    Route::post('/salle/{rdv}/messages', [ConsultationSalleController::class, 'storeMessage'])->name('salle.messages.store');
+
 });
 
 require __DIR__.'/auth.php';
