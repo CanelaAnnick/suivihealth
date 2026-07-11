@@ -18,6 +18,15 @@
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     Vérifié
                 </span>
+                @if ($medecin->disponible_immediat)
+                    <span class="inline-flex items-center gap-1 text-[10.5px] font-medium text-teal-700">
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Disponible maintenant
+                    </span>
+                @else
+                    <span class="inline-flex items-center gap-1 text-[10.5px] font-medium text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span> Hors ligne
+                    </span>
+                @endif
             </div>
             <p class="text-[12.5px] text-slate-500 mt-0.5">{{ $label ?? $medecin->specialite }}</p>
             <p class="text-[12px] text-slate-400 mt-1 flex items-center gap-1">
@@ -30,8 +39,14 @@
 
     <div class="flex sm:flex-col gap-2 shrink-0 sm:w-[136px]">
         <button type="button"
-            @click="$dispatch('open-consultation', { medecinId: {{ $medecin->id }}, nom: @js($medecin->user->name), specialite: @js($label ?? $medecin->specialite), tarif: {{ $medecin->tarif }}, flow: 'consulter' })"
-            class="flex-1 text-center text-[12.5px] font-medium bg-navy-900 text-white py-2 rounded-lg hover:bg-navy-800 transition">
+            @if ($medecin->disponible_immediat)
+                @click="$dispatch('open-consultation', { medecinId: {{ $medecin->id }}, nom: @js($medecin->user->name), specialite: @js($label ?? $medecin->specialite), tarif: {{ $medecin->tarif }}, flow: 'consulter' })"
+                class="flex-1 text-center text-[12.5px] font-medium bg-navy-900 text-white py-2 rounded-lg hover:bg-navy-800 transition"
+            @else
+                disabled title="Ce médecin n'est pas disponible pour une consultation immédiate"
+                class="flex-1 text-center text-[12.5px] font-medium bg-slate-100 text-slate-400 py-2 rounded-lg cursor-not-allowed"
+            @endif
+        >
             Consulter
         </button>
         <button type="button"

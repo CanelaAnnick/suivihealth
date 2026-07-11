@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\RendezVous;
 
 class MedecinRendezVousController extends Controller
@@ -11,12 +12,56 @@ class MedecinRendezVousController extends Controller
         $medecinId = auth()->user()->medecin->id;
 
         $enAttente = RendezVous::where('medecin_id', $medecinId)
-            ->where('statut', 'en_attente')->with('patient.user')->latest()->get();
+            ->where('type', 'immediat')->where('statut', 'en_attente')
+            ->where('statut_paiement', 'paye')
+            ->with('patient.user')->latest()->get();
 
         $confirmes = RendezVous::where('medecin_id', $medecinId)
             ->where('statut', 'confirme')->with('patient.user')
             ->orderByRaw('date_rdv IS NULL, date_rdv, heure_rdv')->get();
 
         return view('medecin.rendezvous', compact('enAttente', 'confirmes'));
+    }
+
+    public function demandesEnAttente()
+    {
+        $medecinId = auth()->user()->medecin->id;
+
+        $demandes = RendezVous::where('medecin_id', $medecinId)
+            ->where('type', 'immediat')->where('statut', 'en_attente')
+            ->where('statut_paiement', 'paye')
+            ->with('patient.user')->latest()->get();
+
+        return response()->json($demandes);
+    }
+
+    public function accepter(RendezVous $rdv)
+    {
+        abort_if($rdv->medecin_id !== auth()->user()->medecin->id, 403);
+
+        $rdv->update(['statut' => 'confirme']);
+
+        Notification::create([
+            'user_id' => $rdv->patient->user_id,
+            'titre' => 'Consultation acceptée',
+            'message' => 'Dr. '.auth()->user()->name.' a accepté votre demande. Rejoignez la salle.',
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function refuser(RendezVous $rdv)
+    {
+        abort_if($rdv->medecin_id !== auth()->user()->medecin->id, 403);
+
+        $rdv->update(['statut' => 'annule']);
+
+        Notification::create([
+            'user_id' => $rdv->patient->user_id,
+            'titre' => 'Consultation refusée',
+            'message' => 'Dr. '.auth()->user()->name.' n\'est plus disponible pour le moment. Réessayez plus tard.',
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }

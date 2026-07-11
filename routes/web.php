@@ -15,6 +15,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientProfilController;
 use App\Http\Controllers\ConsultationSalleController;
 use App\Http\Controllers\MedecinRendezVousController;
+use App\Http\Controllers\MedecinPatientController;
+use App\Http\Controllers\MedecinOrdonnanceController;
 
 
 
@@ -67,9 +69,19 @@ Route::middleware(['auth', 'role:patient'])->prefix('patient')->name('patient.')
 Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')->group(function () {
     Route::get('/dashboard', [MedecinDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/patients', fn () => view('dashboards.placeholder', ['title' => 'Mes patients', 'roleSidebar' => 'sidebar-medecin', 'active' => 'patients']))->name('patients');
+    Route::get('/patients', [MedecinPatientController::class, 'index'])->name('patients');
+    Route::get('/patients/{patient}', [MedecinPatientController::class, 'show'])->name('patients.show');
+
     Route::get('/rendez-vous', [MedecinRendezVousController::class, 'index'])->name('rendezvous');
-    Route::get('/ordonnances', fn () => view('dashboards.placeholder', ['title' => 'Ordonnances', 'roleSidebar' => 'sidebar-medecin', 'active' => 'ordonnances']))->name('ordonnances');
+    Route::get('/rendez-vous/demandes', [MedecinRendezVousController::class, 'demandesEnAttente'])->name('rendezvous.demandes');
+    Route::post('/rendez-vous/{rdv}/accepter', [MedecinRendezVousController::class, 'accepter'])->name('rendezvous.accepter');
+    Route::post('/rendez-vous/{rdv}/refuser', [MedecinRendezVousController::class, 'refuser'])->name('rendezvous.refuser');
+
+    Route::get('/ordonnances', [MedecinOrdonnanceController::class, 'index'])->name('ordonnances');
+    Route::get('/patients/{patient}/ordonnance', [MedecinOrdonnanceController::class, 'create'])->name('ordonnances.create');
+    Route::post('/patients/{patient}/ordonnance', [MedecinOrdonnanceController::class, 'store'])->name('ordonnances.store');
+
+    Route::patch('/disponibilite', [MedecinDashboardController::class, 'toggleDisponibilite'])->name('disponibilite.toggle');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -89,7 +101,7 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('supe
 });
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -101,6 +113,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/salle/{rdv}', [ConsultationSalleController::class, 'show'])->name('salle.show');
     Route::get('/salle/{rdv}/messages', [ConsultationSalleController::class, 'getMessages'])->name('salle.messages.index');
     Route::post('/salle/{rdv}/messages', [ConsultationSalleController::class, 'storeMessage'])->name('salle.messages.store');
+
+    Route::get('/salle/{rdv}/statut', [ConsultationSalleController::class, 'statut'])->name('salle.statut');
+    Route::get('/salle/{rdv}/attente', function (\App\Models\RendezVous $rdv) {
+        abort_if(auth()->user()->patient?->id !== $rdv->patient_id, 403);
+        return view('salle.attente', compact('rdv'));
+    })->name('salle.attente');
 
 });
 

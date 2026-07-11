@@ -28,4 +28,8 @@ class Patient extends Model
     {
         return $this->hasMany(RendezVous::class);
     }
+    public function aConsulteAvec(int $medecinId): bool
+    {
+        return $this->rendezVous()->where('medecin_id', $medecinId)->exists();
+    }
 }

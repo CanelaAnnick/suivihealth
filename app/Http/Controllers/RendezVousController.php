@@ -126,17 +126,19 @@ class RendezVousController extends Controller
     
         $request->validate(['moyen_paiement' => 'required|in:orange_money,mtn_momo,carte']);
     
+        // Immédiat : paiement OK, mais on attend l'acceptation du médecin.
+        // Programmé : confirmé directement, le médecin verra le RDV dans son planning.
         $rdv->update([
             'moyen_paiement' => $request->moyen_paiement,
             'statut_paiement' => 'paye',
-            'statut' => 'confirme',
+            'statut' => $rdv->type === 'immediat' ? 'en_attente' : 'confirme',
         ]);
     
         try {
             \App\Models\Notification::create([
-                'user_id' => auth()->id(),
-                'titre' => 'Rendez-vous confirmé',
-                'message' => 'Votre '.($rdv->type === 'immediat' ? 'consultation' : 'rendez-vous').' avec '.$rdv->medecin->user->name.' est confirmé.',
+                'user_id' => $rdv->medecin->user_id,
+                'titre' => $rdv->type === 'immediat' ? 'Nouvelle demande de consultation' : 'Nouveau rendez-vous',
+                'message' => $rdv->patient->user->name.' souhaite une consultation '.$rdv->mode.'.',
             ]);
         } catch (\Throwable $e) {
             \Log::warning('Notification non créée : '.$e->getMessage());

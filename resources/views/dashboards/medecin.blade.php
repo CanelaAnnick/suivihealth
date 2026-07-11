@@ -8,10 +8,23 @@
 
 @section('content')
 
-<div class="bg-gradient-to-br from-navy-900 to-teal-700 rounded-2xl p-6 mb-6 text-white">
-    <p class="text-[12.5px] text-white/70">{{ now()->translatedFormat('l d F Y') }}</p>
-    <h2 class="text-[20px] font-semibold mt-1">Bonjour, {{ auth()->user()->name }} 👋</h2>
-    <p class="text-white/70 text-[13px] mt-1">{{ auth()->user()->medecin->specialite }} · {{ auth()->user()->medecin->hopital ?? 'Cabinet indépendant' }}</p>
+<div class="bg-gradient-to-br from-navy-900 to-teal-700 rounded-2xl p-6 mb-6 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+    x-data="{ dispo: {{ auth()->user()->medecin->disponible_immediat ? 'true' : 'false' }}, loading: false }">
+    <div>
+        <p class="text-[12.5px] text-white/70">{{ now()->translatedFormat('l d F Y') }}</p>
+        <h2 class="text-[20px] font-semibold mt-1">Bonjour, {{ auth()->user()->name }} 👋</h2>
+        <p class="text-white/70 text-[13px] mt-1">{{ auth()->user()->medecin->specialite }} · {{ auth()->user()->medecin->hopital ?? 'Cabinet indépendant' }}</p>
+    </div>
+
+    <button type="button" :disabled="loading"
+        @click="loading = true; fetch('{{ route('medecin.disponibilite.toggle') }}', { method: 'PATCH', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content } }).then(r => r.json()).then(d => { dispo = d.disponible; loading = false })"
+        class="flex items-center gap-3 bg-white/10 hover:bg-white/15 transition rounded-xl px-4 py-3 shrink-0">
+        <span class="w-2.5 h-2.5 rounded-full" :class="dispo ? 'bg-teal-400' : 'bg-slate-400'"></span>
+        <div class="text-left">
+            <p class="text-[12.5px] font-medium" x-text="dispo ? 'Disponible pour consultation immédiate' : 'Indisponible actuellement'"></p>
+            <p class="text-[11px] text-white/60">Cliquez pour changer</p>
+        </div>
+    </button>
 </div>
 
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

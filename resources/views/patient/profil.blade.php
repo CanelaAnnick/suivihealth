@@ -40,6 +40,27 @@
         </form>
     </x-section-card>
 
+    <x-section-card title="Sécurité — Changer mon mot de passe">
+        <form method="POST" action="{{ route('password.update') }}" class="p-5 space-y-4">
+            @csrf @method('put')
+            <div>
+                <label class="text-[12.5px] font-medium text-slate-700">Mot de passe actuel</label>
+                <input type="password" name="current_password" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+                @error('current_password', 'updatePassword') <p class="text-red-600 text-[11.5px] mt-1">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="text-[12.5px] font-medium text-slate-700">Nouveau mot de passe</label>
+                <input type="password" name="password" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+                @error('password', 'updatePassword') <p class="text-red-600 text-[11.5px] mt-1">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="text-[12.5px] font-medium text-slate-700">Confirmer le nouveau mot de passe</label>
+                <input type="password" name="password_confirmation" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+            </div>
+            <button type="submit" class="bg-navy-900 text-white text-[13px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition">Mettre à jour le mot de passe</button>
+        </form>
+    </x-section-card>
+    
     <x-section-card title="Informations médicales">
         <form method="POST" action="{{ route('patient.profil.infos') }}" class="p-5 space-y-4">
             @csrf @method('patch')

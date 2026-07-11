@@ -48,4 +48,10 @@ class ConsultationSalleController extends Controller
 
         return response()->json($message->load('sender'));
     }
+    public function statut(RendezVous $rdv)
+    {
+        $this->autoriser($rdv);
+    
+        return response()->json(['statut' => $rdv->statut]);
+    }
 }

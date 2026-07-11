@@ -19,20 +19,20 @@
         <p>SuiviHealth — Plateforme de consultation et de suivi médical</p>
     </div>
 
-    <div class="row"><span class="label">Patient</span><strong>{{ $ordonnance->patient->user->name }}</strong></div>
-    <div class="row"><span class="label">Médecin prescripteur</span><strong>{{ $ordonnance->medecin->user->name }}</strong></div>
-    <div class="row"><span class="label">Spécialité</span><strong>{{ $ordonnance->medecin->specialite }}</strong></div>
-    <div class="row"><span class="label">Date de prescription</span><strong>{{ $ordonnance->date_prescription->format('d/m/Y') }}</strong></div>
+    <div class="row"><span class="label">Patient:</span><strong> {{ $ordonnance->patient->user->name }}</strong></div>
+    <div class="row"><span class="label">Médecin prescripteur:</span><strong> {{ $ordonnance->medecin->user->name }}</strong></div>
+    <div class="row"><span class="label">Spécialité:</span><strong> {{ $ordonnance->medecin->specialite }}</strong></div>
+    <div class="row"><span class="label">Date de prescription:</span><strong> {{ $ordonnance->date_prescription->format('d/m/Y') }}</strong></div>
 
     <div class="box">
         <p class="label" style="margin-bottom:8px;">MÉDICAMENTS PRESCRITS</p>
-        <p style="white-space: pre-line;">{{ $ordonnance->medicaments }}</p>
+        <p style="white-space: pre-line;"> {{ $ordonnance->medicaments }}</p>
     </div>
 
     @if ($ordonnance->instructions)
     <div class="box">
         <p class="label" style="margin-bottom:8px;">INSTRUCTIONS</p>
-        <p style="white-space: pre-line;">{{ $ordonnance->instructions }}</p>
+        <p style="white-space: pre-line;"> {{ $ordonnance->instructions }}</p>
     </div>
     @endif
 

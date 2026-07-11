@@ -28,4 +28,11 @@ class MedecinDashboardController extends Controller
 
         return view('dashboards.medecin', compact('rdvAujourdhui', 'rdvEnAttente', 'totalPatients', 'prochainsRdv'));
     }
+    public function toggleDisponibilite()
+    {
+        $medecin = auth()->user()->medecin;
+        $medecin->update(['disponible_immediat' => ! $medecin->disponible_immediat]);
+    
+        return response()->json(['disponible' => $medecin->disponible_immediat]);
+    }
 }
