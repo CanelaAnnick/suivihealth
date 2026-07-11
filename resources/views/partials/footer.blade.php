@@ -1,7 +1,9 @@
 <footer class="bg-navy-900 border-t border-navy-800 text-slate-400 text-sm">
     <div class="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-4 gap-10">
         <div>
-            <span class="font-display text-white font-semibold text-lg">SuiviHealth</span>
+            <div class="bg-white rounded-lg inline-block p-1.5">
+                <x-logo class="h-8" />
+            </div>
             <p class="mt-3 leading-relaxed">La plateforme camerounaise de consultation et de suivi médical en ligne.</p>
         </div>
         <div>

@@ -1,10 +1,7 @@
 <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-100" x-data="{ open: false }">
     <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        <a href="{{ route('home') }}" class="flex items-center gap-2">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" class="text-coral-500">
-                <path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="font-display font-semibold text-lg">SuiviHealth</span>
+        <a href="{{ route('home') }}" class="flex items-center">
+            <x-logo class="h-11" />
         </a>
 
         <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">

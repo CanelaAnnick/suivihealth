@@ -16,4 +16,16 @@ class Patient extends Model
     {
         return $this->hasMany(Symptome::class);
     }
+    public function constantes()
+    {
+        return $this->hasMany(Constante::class);
+    }
+    public function ordonnances()
+    {
+        return $this->hasMany(Ordonnance::class);
+    }
+    public function rendezVous()
+    {
+        return $this->hasMany(RendezVous::class);
+    }
 }

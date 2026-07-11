@@ -16,9 +16,12 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        if (auth()->user()->role === 'patient') {
+            $rendezVous = auth()->user()->patient->rendezVous()->with('medecin.user')->latest('created_at')->get();
+            return view('patient.profil', ['user' => $request->user(), 'rendezVous' => $rendezVous]);
+        }
+    
+        return view('profile.edit-simple', ['user' => $request->user()]);
     }
 
     /**

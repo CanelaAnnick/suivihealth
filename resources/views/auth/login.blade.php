@@ -3,11 +3,8 @@
 @section('content')
 
 <div class="min-h-screen flex flex-col items-center justify-center px-6 py-12">
-    <a href="{{ route('home') }}" class="flex items-center gap-2 mb-8">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="text-coral-500">
-            <path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="font-display font-semibold text-xl">SuiviHealth</span>
+    <a href="{{ route('home') }}" class="mb-8">
+        <x-logo class="h-14" />
     </a>
 
     <div class="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
