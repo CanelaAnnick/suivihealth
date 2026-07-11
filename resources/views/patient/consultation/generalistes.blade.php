@@ -21,6 +21,10 @@
 <p class="text-slate-500 text-[13px] mb-5">Consultation de routine ou premier avis médical.</p>
 
 <form method="GET" action="{{ route('patient.consultation.generalistes') }}" class="flex flex-wrap gap-3 mb-5 bg-white border border-slate-200 rounded-xl p-4">
+    <div class="flex-1 min-w-[180px]">
+        <label class="text-[11.5px] font-medium text-slate-500 block mb-1">Nom du médecin</label>
+        <input type="text" name="recherche" value="{{ request('recherche') }}" placeholder="Rechercher..." class="w-full rounded-lg border-slate-200 text-[12.5px] focus:border-navy-800 focus:ring-navy-800">
+    </div>
     <div class="flex-1 min-w-[150px]">
         <label class="text-[11.5px] font-medium text-slate-500 block mb-1">Région</label>
         <select name="region" onchange="this.form.submit()" class="w-full rounded-lg border-slate-200 text-[12.5px] focus:border-navy-800 focus:ring-navy-800">

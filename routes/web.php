@@ -17,6 +17,8 @@ use App\Http\Controllers\ConsultationSalleController;
 use App\Http\Controllers\MedecinRendezVousController;
 use App\Http\Controllers\MedecinPatientController;
 use App\Http\Controllers\MedecinOrdonnanceController;
+use App\Http\Controllers\AdminPaiementController;
+use App\Http\Controllers\UrgenceController;
 
 
 
@@ -64,6 +66,10 @@ Route::middleware(['auth', 'role:patient'])->prefix('patient')->name('patient.')
     Route::get('/ordonnances', [OrdonnanceController::class, 'index'])->name('ordonnances.index');
     Route::get('/ordonnances/{ordonnance}/telecharger', [OrdonnanceController::class, 'telecharger'])->name('ordonnances.telecharger');
     Route::patch('/profil/infos', [PatientProfilController::class, 'update'])->name('profil.infos');
+
+    Route::get('/dossier-medical/export', [DossierMedicalController::class, 'exportPdf'])->name('dossier.export');
+
+    Route::get('/urgence', [UrgenceController::class, 'index'])->name('urgence');
 });
 
 Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')->group(function () {
@@ -90,6 +96,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/medecins', fn () => view('dashboards.placeholder', ['title' => 'Médecins', 'roleSidebar' => 'sidebar-admin', 'active' => 'medecins']))->name('medecins.index');
     Route::get('/patients', fn () => view('dashboards.placeholder', ['title' => 'Patients', 'roleSidebar' => 'sidebar-admin', 'active' => 'patients']))->name('patients.index');
     Route::get('/statistiques', fn () => view('dashboards.placeholder', ['title' => 'Statistiques', 'roleSidebar' => 'sidebar-admin', 'active' => 'stats']))->name('statistiques');
+
+    Route::get('/paiements', [AdminPaiementController::class, 'index'])->name('paiements.index');
 });
 
 Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
@@ -97,7 +105,7 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('supe
 
     Route::get('/hopitaux', fn () => view('dashboards.placeholder', ['title' => 'Hôpitaux', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'hopitaux']))->name('hopitaux.index');
     Route::get('/administrateurs', fn () => view('dashboards.placeholder', ['title' => 'Administrateurs', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'admins']))->name('admins.index');
-    Route::get('/statistiques', fn () => view('dashboards.placeholder', ['title' => 'Statistiques globales', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'stats']))->name('statistiques');
+    Route::get('/statistiques', [AdminDashboardController::class, 'statistiques'])->name('statistiques');
 });
 
 Route::middleware('auth')->group(function () {

@@ -25,4 +25,14 @@ class DossierMedicalController extends Controller
 
         return back()->with('status', 'Symptôme ajouté avec succès.');
     }
+    public function exportPdf()
+    {
+        $patient = auth()->user()->patient;
+        $symptomes = $patient->symptomes()->latest()->get();
+        $constantes = $patient->constantes()->latest()->get();
+    
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.dossier-medical', compact('patient', 'symptomes', 'constantes'));
+    
+        return $pdf->download('dossier-medical-'.now()->format('d-m-Y').'.pdf');
+    }
 }

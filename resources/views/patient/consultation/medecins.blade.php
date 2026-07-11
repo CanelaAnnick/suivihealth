@@ -13,6 +13,10 @@
 </a>
 
 <form method="GET" action="{{ route('patient.consultation.medecins') }}" class="flex flex-wrap gap-3 mb-5 bg-white border border-slate-200 rounded-xl p-4">
+    <div class="flex-1 min-w-[180px]">
+        <label class="text-[11.5px] font-medium text-slate-500 block mb-1">Nom du médecin</label>
+        <input type="text" name="recherche" value="{{ request('recherche') }}" placeholder="Rechercher..." class="w-full rounded-lg border-slate-200 text-[12.5px] focus:border-navy-800 focus:ring-navy-800">
+    </div>
     <input type="hidden" name="specialite" value="{{ $specialite }}">
     <div class="flex-1 min-w-[150px]">
         <label class="text-[11.5px] font-medium text-slate-500 block mb-1">Région</label>
@@ -31,6 +35,9 @@
                 <option value="{{ $hopital }}" @selected(request('hopital') === $hopital)>{{ $hopital }}</option>
             @endforeach
         </select>
+    </div>
+    <div class="flex items-end">
+        <button type="submit" class="bg-navy-900 text-white text-[12.5px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition">Filtrer</button>
     </div>
 </form>
 

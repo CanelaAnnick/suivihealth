@@ -8,6 +8,9 @@
 <x-nav-item :route="route('admin.medecins.index')" :active="$active === 'medecins'" :icon="$icon('<path d=\'M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z\'/>')">
     Médecins
 </x-nav-item>
+<x-nav-item :route="route('admin.paiements.index')" :active="$active === 'paiements'" :icon="$icon('<path d=\'M2.25 8.25h19.5M2.25 8.25v10.5A2.25 2.25 0 004.5 21h15a2.25 2.25 0 002.25-2.25V8.25M2.25 8.25V6a2.25 2.25 0 012.25-2.25h15A2.25 2.25 0 0121.75 6v2.25M6 15.75h3\'/>')">
+    Paiements
+</x-nav-item>
 <x-nav-item :route="route('admin.patients.index')" :active="$active === 'patients'" :icon="$icon('<path d=\'M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z\'/>')">
     Patients
 </x-nav-item>
