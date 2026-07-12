@@ -43,15 +43,19 @@
 
     <div class="md:ml-[252px] flex flex-col min-h-screen">
         <header class="sticky top-0 z-20 h-16 bg-white border-b border-slate-200 flex items-center justify-between gap-4 px-5 md:px-8"
-            x-data="{ notifOpen: false, profileOpen: false, notifs: [], nonLues: 0 }"
-            x-init="fetch('{{ route('notifications.index') }}').then(r => r.json()).then(d => { notifs = d.notifications; nonLues = d.non_lues })">
+        x-data="{ notifOpen: false, profileOpen: false, notifs: [], nonLues: 0 }"
+        x-init="
+            const charger = () => fetch('{{ route('notifications.index') }}').then(r => r.json()).then(d => { notifs = d.notifications; nonLues = d.non_lues });
+            charger();
+            setInterval(charger, 10000);
+        ">
 
             <h1 class="font-semibold text-[15.5px] text-slate-900 truncate">@yield('page-title', 'Tableau de bord')</h1>
 
             <div class="flex items-center gap-3 shrink-0">
                 <div class="relative">
                     <button @click="notifOpen = !notifOpen; profileOpen = false" class="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 transition" aria-label="Notifications">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
                         <span x-show="nonLues > 0" x-cloak class="absolute top-1 right-1 w-2 h-2 bg-coral-500 rounded-full ring-2 ring-white"></span>
                     </button>
                     <div x-show="notifOpen" x-cloak @click.outside="notifOpen = false" x-transition class="absolute right-0 mt-2 w-80 bg-white rounded-xl border border-slate-200 shadow-lg shadow-slate-200/50 z-30 max-h-96 overflow-y-auto">
@@ -71,6 +75,35 @@
                     </div>
                 </div>
 
+                @if (auth()->user()->role === 'medecin')
+                    <div class="relative" x-data="{ open: false, demandes: [] }" x-init="
+                        const charger = () => fetch('{{ route('medecin.rendezvous.demandes') }}').then(r => r.json()).then(d => demandes = d);
+                        charger(); setInterval(charger, 8000);
+                    ">
+                        <button @click="open = !open" class="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 transition" aria-label="Demandes de consultation">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h1.5a2.25 2.25 0 002.25-2.25v-1.5a1.125 1.125 0 00-.852-1.09l-4.5-1.125a1.125 1.125 0 00-1.173.417l-.97 1.293a12.05 12.05 0 01-5.649-5.649l1.293-.97a1.125 1.125 0 00.417-1.173L8.09 3.102a1.125 1.125 0 00-1.09-.852h-1.5A2.25 2.25 0 003.25 4.5"/></svg>
+                            <span x-show="demandes.length > 0" x-cloak x-text="demandes.length" class="absolute -top-1 -right-1 bg-coral-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center ring-2 ring-white"></span>
+                        </button>
+                        <div x-show="open" x-cloak @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-80 bg-white rounded-xl border border-slate-200 shadow-lg shadow-slate-200/50 z-30 max-h-96 overflow-y-auto">
+                            <div class="px-4 py-3 border-b border-slate-100">
+                                <p class="text-[13px] font-semibold text-slate-900">Demandes de consultation immédiate</p>
+                            </div>
+                            <template x-if="demandes.length === 0">
+                                <p class="text-[12.5px] text-slate-400 text-center py-8">Aucune demande en attente.</p>
+                            </template>
+                            <template x-for="d in demandes" :key="d.id">
+                                <div class="px-4 py-3 border-b border-slate-50">
+                                    <p class="text-[12.5px] font-medium text-slate-900" x-text="d.patient.user.name"></p>
+                                    <p class="text-[12px] text-slate-500 mt-0.5" x-text="'Consultation ' + d.mode + ' immédiate'"></p>
+                                    <div class="flex gap-2 mt-2">
+                                        <button @click="fetch('/medecin/rendez-vous/' + d.id + '/refuser', { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content } }).then(() => demandes = demandes.filter(x => x.id !== d.id))" class="text-[11.5px] font-medium border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg hover:bg-slate-50 transition">Refuser</button>
+                                        <button @click="fetch('/medecin/rendez-vous/' + d.id + '/accepter', { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content } }).then(() => window.location.href = '/salle/' + d.id)" class="text-[11.5px] font-medium bg-navy-900 text-white px-2.5 py-1 rounded-lg hover:bg-navy-800 transition">Accepter</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                @endif
                 <div class="w-px h-6 bg-slate-200 shrink-0"></div>
 
                 <div class="relative shrink-0">

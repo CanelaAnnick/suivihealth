@@ -20,6 +20,10 @@ use App\Http\Controllers\MedecinOrdonnanceController;
 use App\Http\Controllers\AdminPaiementController;
 use App\Http\Controllers\UrgenceController;
 use App\Http\Controllers\SuperAdminStatistiquesController;
+use App\Http\Controllers\PatientPlainteController;
+use App\Http\Controllers\AdminPlainteController;
+use App\Http\Controllers\AdminMedecinController;
+use App\Http\Controllers\AdminPatientController;
 
 
 
@@ -71,6 +75,12 @@ Route::middleware(['auth', 'role:patient'])->prefix('patient')->name('patient.')
     Route::get('/dossier-medical/export', [DossierMedicalController::class, 'exportPdf'])->name('dossier.export');
 
     Route::get('/urgence', [UrgenceController::class, 'index'])->name('urgence');
+
+    Route::get('/consultation/{rdv}/reprogrammer', [RendezVousController::class, 'reprogrammer'])->name('consultation.reprogrammer');
+    Route::post('/consultation/{rdv}/reprogrammer', [RendezVousController::class, 'storeReprogrammation'])->name('consultation.reprogrammer.store');
+
+    Route::get('/plaintes', [PatientPlainteController::class, 'index'])->name('plaintes.index');
+    Route::post('/plaintes', [PatientPlainteController::class, 'store'])->name('plaintes.store');
 });
 
 Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')->group(function () {
@@ -94,11 +104,20 @@ Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/medecins', fn () => view('dashboards.placeholder', ['title' => 'Médecins', 'roleSidebar' => 'sidebar-admin', 'active' => 'medecins']))->name('medecins.index');
-    Route::get('/patients', fn () => view('dashboards.placeholder', ['title' => 'Patients', 'roleSidebar' => 'sidebar-admin', 'active' => 'patients']))->name('patients.index');
+    Route::get('/medecins', [AdminMedecinController::class, 'index'])->name('medecins.index');
+    Route::get('/medecins/creer', [AdminMedecinController::class, 'create'])->name('medecins.create');
+    Route::post('/medecins', [AdminMedecinController::class, 'store'])->name('medecins.store');
+    Route::patch('/medecins/{medecin}/statut', [AdminMedecinController::class, 'toggleStatut'])->name('medecins.toggle');
+
+    Route::get('/patients', [AdminPatientController::class, 'index'])->name('patients.index');
+    Route::get('/patients/{patient}', [AdminPatientController::class, 'show'])->name('patients.show');
+
     Route::get('/statistiques', fn () => view('dashboards.placeholder', ['title' => 'Statistiques', 'roleSidebar' => 'sidebar-admin', 'active' => 'stats']))->name('statistiques');
 
     Route::get('/paiements', [AdminPaiementController::class, 'index'])->name('paiements.index');
+
+    Route::get('/plaintes', [AdminPlainteController::class, 'index'])->name('plaintes.index');
+    Route::patch('/plaintes/{plainte}', [AdminPlainteController::class, 'update'])->name('plaintes.update');
 });
 
 Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {

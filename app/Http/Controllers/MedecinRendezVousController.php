@@ -16,6 +16,10 @@ class MedecinRendezVousController extends Controller
             ->where('statut_paiement', 'paye')
             ->with('patient.user')->latest()->get();
     
+        $aReprogrammer = RendezVous::where('medecin_id', $medecinId)
+            ->where('statut', 'a_reprogrammer')
+            ->with('patient.user')->latest()->get();
+    
         $confirmes = RendezVous::where('medecin_id', $medecinId)
             ->where('statut', 'confirme')->with('patient.user')
             ->orderByRaw('date_rdv IS NULL, date_rdv, heure_rdv')->get();
@@ -24,7 +28,7 @@ class MedecinRendezVousController extends Controller
             ->whereIn('statut', ['termine', 'annule'])
             ->with('patient.user')->latest('updated_at')->take(20)->get();
     
-        return view('medecin.rendezvous', compact('enAttente', 'confirmes', 'historique'));
+        return view('medecin.rendezvous', compact('enAttente', 'aReprogrammer', 'confirmes', 'historique'));
     }
 
     public function demandesEnAttente()
@@ -57,15 +61,15 @@ class MedecinRendezVousController extends Controller
     public function refuser(RendezVous $rdv)
     {
         abort_if($rdv->medecin_id !== auth()->user()->medecin->id, 403);
-
-        $rdv->update(['statut' => 'annule']);
-
+    
+        $rdv->update(['statut' => 'a_reprogrammer']);
+    
         Notification::create([
             'user_id' => $rdv->patient->user_id,
-            'titre' => 'Consultation refusée',
-            'message' => 'Dr. '.auth()->user()->name.' n\'est plus disponible pour le moment. Réessayez plus tard.',
+            'titre' => 'Consultation à reprogrammer',
+            'message' => 'Dr. '.auth()->user()->name.' n\'est pas disponible maintenant. Choisissez un nouveau créneau — déjà payé, aucun nouveau paiement requis.',
         ]);
-
+    
         return response()->json(['success' => true]);
     }
 }

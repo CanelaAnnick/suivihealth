@@ -32,4 +32,8 @@ class Patient extends Model
     {
         return $this->rendezVous()->where('medecin_id', $medecinId)->exists();
     }
+    public function plaintes()
+    {
+        return $this->hasMany(Plainte::class);
+    }
 }

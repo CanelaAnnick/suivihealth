@@ -13,7 +13,7 @@
         <div class="bg-white border border-slate-200 rounded-xl p-5 flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 min-w-0">
                 <div class="w-11 h-11 rounded-lg bg-navy-900/5 flex items-center justify-center text-navy-800 shrink-0">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <div class="min-w-0">
                     <p class="text-[13.5px] font-semibold text-slate-900">Prescrite par {{ $o->medecin->user->name }}</p>

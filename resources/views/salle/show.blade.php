@@ -69,15 +69,20 @@
                     <h3 class="text-[15px] font-semibold text-slate-900 mb-1.5">Salle {{ $rdv->mode === 'video' ? 'vidéo' : 'audio' }} prête</h3>
                     <p class="text-slate-500 text-[13px] mb-6 max-w-sm mx-auto">La salle s'ouvre dans un nouvel onglet pour garantir une connexion caméra/micro fiable.</p>
 
-                    <a href="https://meet.jit.si/suivihealth-{{ $rdv->salle_id }}#config.startWithVideoMuted={{ $rdv->mode === 'audio' ? 'true' : 'false' }}&userInfo.displayName=%22{{ urlencode(auth()->user()->name) }}%22"
-                        target="_blank" @click="joined = true"
-                        class="inline-flex items-center gap-2 bg-navy-900 text-white text-[13.5px] font-medium px-6 py-3 rounded-lg hover:bg-navy-800 transition">
-                        Ouvrir la salle {{ $rdv->mode === 'video' ? 'vidéo' : 'audio' }}
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h6v6M12 3L7 8M9 3H3.75A.75.75 0 003 3.75V12a.75.75 0 00.75.75H12a.75.75 0 00.75-.75V9"/></svg>
-                    </a>
+                    <button type="button" @click="
+                    let w = window.open('https://meet.jit.si/suivihealth-{{ $rdv->salle_id }}#config.startWithVideoMuted={{ $rdv->mode === 'audio' ? 'true' : 'false' }}&userInfo.displayName=%22{{ rawurlencode(auth()->user()->name) }}%22', '_blank');
+                    if (!w) { alert('Votre navigateur a bloqué l\'ouverture de la salle. Autorisez les pop-ups pour ce site puis réessayez.'); return; }
+                    joined = true;
+                    let check = setInterval(() => {
+                        try { if (w.closed) { clearInterval(check); terminer(); } } catch (e) {}
+                    }, 1000);
+                " class="inline-flex items-center gap-2 bg-navy-900 text-white text-[13.5px] font-medium px-6 py-3 rounded-lg hover:bg-navy-800 transition">
+                    Ouvrir la salle {{ $rdv->mode === 'video' ? 'vidéo' : 'audio' }}
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h6v6M12 3L7 8M9 3H3.75A.75.75 0 003 3.75V12a.75.75 0 00.75.75H12a.75.75 0 00.75-.75V9"/></svg>
+                </button>
 
                     <p x-show="joined" x-cloak class="text-[12px] text-teal-600 mt-4">Onglet ouvert — l'autre participant doit aussi cliquer sur ce bouton pour vous rejoindre.</p>
-                    <p class="text-[11.5px] text-slate-400 mt-5">Une fois l'appel fini, revenez ici et cliquez sur <strong>"Terminer la consultation"</strong> ci-dessus — l'appel Jitsi lui-même ne prévient pas SuiviHealth quand vous raccrochez.</p>
+                    <p class="text-[11.5px] text-slate-400 mt-5">Pour que la consultation se termine automatiquement des deux côtés, <strong>fermez complètement l'onglet</strong> Jitsi (pas juste "Raccrocher" à l'intérieur). Sinon, cliquez sur "Terminer la consultation" ci-dessus une fois l'appel fini.</p>
                 </div>
             @else
                 <div class="bg-white border border-slate-200 rounded-2xl flex flex-col" style="height: 560px;" x-data="chatSalle({{ $rdv->id }}, {{ auth()->id() }})" x-init="load(); setInterval(load, 3000)">

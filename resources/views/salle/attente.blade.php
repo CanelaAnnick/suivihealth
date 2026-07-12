@@ -26,14 +26,14 @@
         </div>
     </template>
 
-    <template x-if="statut === 'annule'">
+    <template x-if="statut === 'a_reprogrammer'">
         <div>
-            <div class="w-14 h-14 mx-auto rounded-full bg-red-50 flex items-center justify-center text-red-600 mb-4">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            <div class="w-14 h-14 mx-auto rounded-full bg-amber-50 flex items-center justify-center text-amber-600 mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
             </div>
-            <h2 class="text-[15px] font-semibold text-slate-900 mb-1.5">Consultation refusée</h2>
-            <p class="text-slate-500 text-[13px] leading-relaxed mb-5">Le médecin n'est pas disponible pour le moment.</p>
-            <a href="{{ route('patient.consultation.choix') }}" class="inline-block bg-navy-900 text-white text-[13px] font-medium px-5 py-2.5 rounded-lg hover:bg-navy-800 transition">Choisir un autre médecin</a>
+            <h2 class="text-[15px] font-semibold text-slate-900 mb-1.5">Médecin indisponible pour le moment</h2>
+            <p class="text-slate-500 text-[13px] leading-relaxed mb-5">Votre paiement reste valide. Choisissez simplement un nouveau créneau avec ce même médecin, sans repayer.</p>
+            <a href="{{ route('patient.consultation.reprogrammer', $rdv) }}" class="inline-block bg-navy-900 text-white text-[13px] font-medium px-5 py-2.5 rounded-lg hover:bg-navy-800 transition">Choisir un nouveau créneau</a>
         </div>
     </template>
 </div>

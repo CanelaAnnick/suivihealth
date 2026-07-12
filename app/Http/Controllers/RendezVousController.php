@@ -146,4 +146,37 @@ class RendezVousController extends Controller
     
         return response()->json(['success' => true]);
     }
+    public function reprogrammer(RendezVous $rdv)
+    {
+        abort_if($rdv->patient_id !== auth()->user()->patient->id, 403);
+        abort_unless($rdv->statut === 'a_reprogrammer', 404);
+    
+        return view('patient.consultation.reprogrammer', compact('rdv'));
+    }
+
+    public function storeReprogrammation(Request $request, RendezVous $rdv)
+    {
+        abort_if($rdv->patient_id !== auth()->user()->patient->id, 403);
+        abort_unless($rdv->statut === 'a_reprogrammer', 404);
+
+        $request->validate([
+            'date_rdv' => 'required|date|after_or_equal:today',
+            'heure_rdv' => 'required',
+        ]);
+
+        $rdv->update([
+            'date_rdv' => $request->date_rdv,
+            'heure_rdv' => $request->heure_rdv,
+            'type' => 'programme',
+            'statut' => 'confirme',
+        ]);
+
+        \App\Models\Notification::create([
+            'user_id' => $rdv->medecin->user_id,
+            'titre' => 'Rendez-vous reprogrammé',
+            'message' => $rdv->patient->user->name.' a choisi un nouveau créneau.',
+        ]);
+
+        return redirect()->route('patient.dashboard')->with('status', 'Rendez-vous reprogrammé avec succès.');
+    }
 }

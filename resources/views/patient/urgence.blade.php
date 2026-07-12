@@ -36,7 +36,7 @@
         <div class="flex items-center justify-between px-5 py-3.5 {{ !$loop->last ? 'border-b border-slate-100' : '' }}">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-lg bg-navy-900/5 text-navy-800 flex items-center justify-center shrink-0">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3.75 21h16.5M4.5 3h15l-.75 18h-13.5L4.5 3zM9 8.25h1.5m3 0H15"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3.75 21h16.5M4.5 3h15l-.75 18h-13.5L4.5 3zM9 8.25h1.5m3 0H15"/></svg>
                 </div>
                 <div>
                     <p class="text-[13px] font-medium text-slate-900">{{ $h->hopital }}</p>

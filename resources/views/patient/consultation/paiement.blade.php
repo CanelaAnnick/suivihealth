@@ -49,7 +49,7 @@
             <label class="flex items-center gap-3 border border-slate-200 rounded-lg p-3.5 cursor-pointer has-[:checked]:border-navy-800 has-[:checked]:bg-navy-900/5">
                 <input type="radio" name="moyen_paiement" value="carte" class="accent-navy-900">
                 <span class="w-8 h-8 rounded-md bg-teal-50 flex items-center justify-center text-teal-700">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.75 6.417h12.5M1.75 4.25h12.5A1.083 1.083 0 0115.333 5.333v5.834a1.083 1.083 0 01-1.083 1.083H1.75a1.083 1.083 0 01-1.083-1.083V5.333A1.083 1.083 0 011.75 4.25z"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.75 6.417h12.5M1.75 4.25h12.5A1.083 1.083 0 0115.333 5.333v5.834a1.083 1.083 0 01-1.083 1.083H1.75a1.083 1.083 0 01-1.083-1.083V5.333A1.083 1.083 0 011.75 4.25z"/></svg>
                 </span>
                 <span class="text-[13px] font-medium text-slate-900">Carte bancaire</span>
             </label>
