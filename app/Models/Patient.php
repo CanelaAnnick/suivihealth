@@ -36,4 +36,8 @@ class Patient extends Model
     {
         return $this->hasMany(Plainte::class);
     }
+    public function vaccinations()
+    {
+        return $this->hasMany(Vaccination::class);
+    }
 }

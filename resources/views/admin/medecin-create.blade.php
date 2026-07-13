@@ -59,7 +59,7 @@
             </div>
             <div>
                 <label class="text-[12.5px] font-medium text-slate-700">Hôpital</label>
-                <input type="text" name="hopital" value="{{ old('hopital') }}" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+                <input type="text" value="{{ auth()->user()->hopital->nom ?? 'Non assigné' }}" disabled class="w-full mt-1 rounded-lg border-slate-200 bg-slate-50 text-[13px] text-slate-500">
             </div>
         </div>
 

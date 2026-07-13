@@ -17,13 +17,14 @@
         @csrf
         <h2 class="text-[13.5px] font-semibold text-slate-900">Nouvelle réclamation</h2>
         <div>
-            <label class="text-[12.5px] font-medium text-slate-700">Concerne (optionnel)</label>
-            <select name="rendez_vous_id" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
-                <option value="">Réclamation générale</option>
+            <label class="text-[12.5px] font-medium text-slate-700">Concerne</label>
+            <select name="rendez_vous_id" required class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+                <option value="">Sélectionner une consultation</option>
                 @foreach ($rendezVous as $rdv)
                     <option value="{{ $rdv->id }}">{{ $rdv->medecin->user->name }} — {{ $rdv->created_at->format('d/m/Y') }}</option>
                 @endforeach
             </select>
+            <p class="text-[11px] text-slate-400 mt-1">Votre réclamation sera transmise à l'hôpital concerné par cette consultation.</p>
         </div>
         <div>
             <label class="text-[12.5px] font-medium text-slate-700">Sujet</label>

@@ -27,7 +27,19 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
     
-        return match (Auth::user()->role) {
+        $user = Auth::user();
+    
+        if (! $user->actif) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors(['email' => 'Ce compte a été désactivé.']);
+        }
+    
+        if ($user->role === 'medecin' && ! $user->medecin) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors(['email' => 'Ce compte médecin a été désactivé.']);
+        }
+    
+        return match ($user->role) {
             'patient' => redirect()->intended(route('patient.dashboard')),
             'medecin' => redirect()->intended(route('medecin.dashboard')),
             'admin' => redirect()->intended(route('admin.dashboard')),

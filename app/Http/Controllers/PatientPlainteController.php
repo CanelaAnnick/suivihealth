@@ -20,11 +20,11 @@ class PatientPlainteController extends Controller
         $request->validate([
             'sujet' => 'required|string|max:255',
             'message' => 'required|string',
-            'rendez_vous_id' => 'nullable|exists:rendez_vous,id',
+            'rendez_vous_id' => 'required|exists:rendez_vous,id',
         ]);
-
+    
         auth()->user()->patient->plaintes()->create($request->only('sujet', 'message', 'rendez_vous_id'));
-
-        return back()->with('status', 'Votre réclamation a été envoyée à l\'administration.');
+    
+        return back()->with('status', 'Votre réclamation a été envoyée à l\'hôpital concerné.');
     }
 }

@@ -52,19 +52,21 @@
         <h2 class="text-[13.5px] font-semibold text-slate-900">Historique complet</h2>
     </div>
     @forelse ($constantes as $c)
-        <div class="flex items-center justify-between px-5 py-3 {{ !$loop->last ? 'border-b border-slate-100' : '' }}">
-            <div>
-                <p class="text-[13px] font-medium text-slate-900">
-                    {{ ucfirst($c->type) }} —
-                    @if ($c->type === 'tension')
-                        {{ $c->valeur }}/{{ $c->valeur_secondaire }} mmHg
-                    @else
-                        {{ $c->valeur }} {{ $c->type === 'poids' ? 'kg' : ($c->type === 'glycemie' ? 'g/L' : '°C') }}
-                    @endif
-                </p>
-                <p class="text-[12px] text-slate-400 mt-0.5">{{ $c->created_at->format('d/m/Y à H:i') }}</p>
-            </div>
+    <div class="flex items-center justify-between px-5 py-3 {{ !$loop->last ? 'border-b border-slate-100' : '' }}">
+        <div>
+            <p class="text-[13px] font-medium text-slate-900">
+                {{ ucfirst($c->type) }} —
+                @if ($c->type === 'tension') {{ $c->valeur }}/{{ $c->valeur_secondaire }} mmHg
+                @else {{ $c->valeur }} {{ $c->type === 'poids' ? 'kg' : ($c->type === 'glycemie' ? 'g/L' : '°C') }}
+                @endif
+            </p>
+            <p class="text-[12px] text-slate-400 mt-0.5">{{ $c->created_at->format('d/m/Y à H:i') }}</p>
         </div>
+        <form method="POST" action="{{ route('patient.constantes.destroy', $c) }}" onsubmit="return confirm('Supprimer cette mesure ?')">
+            @csrf @method('delete')
+            <button type="submit" class="text-[11.5px] text-red-600 font-medium hover:underline">Supprimer</button>
+        </form>
+    </div>
     @empty
         <div class="px-5 py-8 text-center">
             <p class="text-[13px] text-slate-400">Aucune constante enregistrée pour le moment.</p>

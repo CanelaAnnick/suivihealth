@@ -31,4 +31,10 @@ class ConstanteController extends Controller
 
         return back()->with('status', 'Constante enregistrée.');
     }
+    public function destroy(\App\Models\Constante $constante)
+    {
+        abort_if($constante->patient_id !== auth()->user()->patient->id, 403);
+        $constante->delete();
+        return back()->with('status', 'Constante supprimée.');
+    }
 }

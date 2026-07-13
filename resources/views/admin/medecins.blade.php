@@ -38,9 +38,11 @@
                 <span @class(['text-[11px] font-medium px-2 py-0.5 rounded-full', 'bg-teal-50 text-teal-700' => $m->statut === 'actif', 'bg-red-50 text-red-700' => $m->statut !== 'actif'])>{{ ucfirst($m->statut) }}</span>
                 <form method="POST" action="{{ route('admin.medecins.toggle', $m) }}">
                     @csrf @method('patch')
-                    <button type="submit" class="text-[12px] text-navy-800 font-medium hover:underline">
-                        {{ $m->statut === 'actif' ? 'Désactiver' : 'Activer' }}
-                    </button>
+                    <button type="submit" class="text-[12px] text-navy-800 font-medium hover:underline">{{ $m->statut === 'actif' ? 'Désactiver' : 'Activer' }}</button>
+                </form>
+                <form method="POST" action="{{ route('admin.medecins.destroy', $m) }}" onsubmit="return confirm('Supprimer ce médecin ? Son historique restera consultable, mais il ne pourra plus se connecter.')">
+                    @csrf @method('delete')
+                    <button type="submit" class="text-[12px] text-red-600 font-medium hover:underline">Supprimer</button>
                 </form>
             </div>
         </div>

@@ -8,9 +8,20 @@
 
 @section('content')
 
+<div class="bg-white border border-slate-200 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row sm:items-center gap-4">
+    <div class="w-16 h-16 rounded-full overflow-hidden shrink-0">
+        <x-avatar :user="$user" size="w-16 h-16" text="text-[18px]" />
+    </div>
+    <form method="POST" action="{{ route('profil.photo') }}" enctype="multipart/form-data" class="flex flex-wrap items-center gap-3">
+        @csrf
+        <input type="file" name="photo" accept="image/*" required class="text-[12.5px] text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-medium file:bg-mist file:text-navy-800 hover:file:bg-slate-100">
+        <button type="submit" class="bg-navy-900 text-white text-[12.5px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition shrink-0">Mettre à jour la photo</button>
+    </form>
+</div>
+
 <div class="bg-gradient-to-br from-navy-900 to-teal-700 rounded-2xl p-6 mb-6 text-white flex items-center gap-4">
-    <div class="w-16 h-16 rounded-full bg-white/15 flex items-center justify-center text-[20px] font-semibold">
-        {{ strtoupper(substr($user->name, 0, 2)) }}
+    <div class="w-14 h-14 rounded-full overflow-hidden shrink-0">
+        <x-avatar :user="$user" size="w-14 h-14" text="text-[16px]" bg="bg-white/15 text-white" />
     </div>
     <div>
         <h2 class="text-[18px] font-semibold">{{ $user->name }}</h2>
@@ -40,27 +51,6 @@
         </form>
     </x-section-card>
 
-    <x-section-card title="Sécurité — Changer mon mot de passe">
-        <form method="POST" action="{{ route('password.update') }}" class="p-5 space-y-4">
-            @csrf @method('put')
-            <div>
-                <label class="text-[12.5px] font-medium text-slate-700">Mot de passe actuel</label>
-                <input type="password" name="current_password" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
-                @error('current_password', 'updatePassword') <p class="text-red-600 text-[11.5px] mt-1">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label class="text-[12.5px] font-medium text-slate-700">Nouveau mot de passe</label>
-                <input type="password" name="password" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
-                @error('password', 'updatePassword') <p class="text-red-600 text-[11.5px] mt-1">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label class="text-[12.5px] font-medium text-slate-700">Confirmer le nouveau mot de passe</label>
-                <input type="password" name="password_confirmation" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
-            </div>
-            <button type="submit" class="bg-navy-900 text-white text-[13px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition">Mettre à jour le mot de passe</button>
-        </form>
-    </x-section-card>
-    
     <x-section-card title="Informations médicales">
         <form method="POST" action="{{ route('patient.profil.infos') }}" class="p-5 space-y-4">
             @csrf @method('patch')
@@ -93,14 +83,36 @@
             <button type="submit" class="bg-navy-900 text-white text-[13px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition">Enregistrer</button>
         </form>
     </x-section-card>
+
+    <x-section-card title="Sécurité — Changer mon mot de passe">
+        <form method="POST" action="{{ route('password.update') }}" class="p-5 space-y-4">
+            @csrf @method('put')
+            <div>
+                <label class="text-[12.5px] font-medium text-slate-700">Mot de passe actuel</label>
+                <input type="password" name="current_password" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+                @error('current_password', 'updatePassword') <p class="text-red-600 text-[11.5px] mt-1">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="text-[12.5px] font-medium text-slate-700">Nouveau mot de passe</label>
+                <input type="password" name="password" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+                @error('password', 'updatePassword') <p class="text-red-600 text-[11.5px] mt-1">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="text-[12.5px] font-medium text-slate-700">Confirmer le nouveau mot de passe</label>
+                <input type="password" name="password_confirmation" class="w-full mt-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
+            </div>
+            <button type="submit" class="bg-navy-900 text-white text-[13px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition">Mettre à jour le mot de passe</button>
+        </form>
+    </x-section-card>
+
 </div>
 
 <x-section-card title="Historique de mes rendez-vous et consultations">
     @forelse ($rendezVous as $rdv)
         <div class="flex items-center justify-between px-5 py-3.5 {{ !$loop->last ? 'border-b border-slate-100' : '' }}">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-lg bg-navy-900/5 text-navy-800 flex items-center justify-center text-[11px] font-semibold shrink-0">
-                    {{ strtoupper(substr($rdv->medecin->user->name, 4, 2)) }}
+                <div class="w-9 h-9 rounded-lg overflow-hidden shrink-0">
+                    <x-avatar :user="$rdv->medecin->user" size="w-9 h-9" text="text-[11px]" bg="bg-navy-900/5 text-navy-800" />
                 </div>
                 <div>
                     <p class="text-[13px] font-medium text-slate-900">{{ $rdv->medecin->user->name }}</p>
@@ -117,9 +129,10 @@
             <span @class([
                 'text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0',
                 'bg-teal-50 text-teal-700' => $rdv->statut === 'confirme',
-                'bg-amber-50 text-amber-700' => $rdv->statut === 'en_attente',
+                'bg-amber-50 text-amber-700' => in_array($rdv->statut, ['en_attente', 'a_reprogrammer']),
                 'bg-red-50 text-red-700' => $rdv->statut === 'annule',
-            ])>{{ $rdv->statut === 'confirme' ? 'Confirmé' : ucfirst($rdv->statut) }}</span>
+                'bg-slate-100 text-slate-600' => $rdv->statut === 'termine',
+            ])>{{ $rdv->statut === 'confirme' ? 'Confirmé' : ucfirst(str_replace('_', ' ', $rdv->statut)) }}</span>
         </div>
     @empty
         <div class="px-5 py-10 text-center">

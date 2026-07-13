@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'accueil' => 'Accueil',
+    'consultation' => 'Consultation',
+    'dossier_medical' => 'Dossier médical',
+    'mes_constantes' => 'Mes constantes',
+    'ordonnances' => 'Ordonnances',
+    'urgence' => 'Urgence',
+    'reclamations' => 'Réclamations',
+    'mon_profil' => 'Mon profil',
+    'se_deconnecter' => 'Se déconnecter',
+    'mes_patients' => 'Mes patients',
+    'rendez_vous' => 'Rendez-vous',
+    'medecins' => 'Médecins',
+    'patients' => 'Patients',
+    'paiements' => 'Paiements',
+    'statistiques' => 'Statistiques',
+    'hopitaux' => 'Hôpitaux',
+    'administrateurs' => 'Administrateurs',
+    'tableau_de_bord' => 'Tableau de bord',
+    'notifications' => 'Notifications',
+    'aucune_notification' => 'Aucune notification.',
+    'tout_marquer_lu' => 'Tout marquer lu',
+];

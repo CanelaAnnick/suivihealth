@@ -24,8 +24,15 @@ use App\Http\Controllers\PatientPlainteController;
 use App\Http\Controllers\AdminPlainteController;
 use App\Http\Controllers\AdminMedecinController;
 use App\Http\Controllers\AdminPatientController;
+use App\Http\Controllers\SuperAdminHopitalController;
+use App\Http\Controllers\SuperAdminAdminController;
+use App\Http\Controllers\ProfilePhotoController;
+use App\Http\Controllers\LangueController;
+use App\Http\Controllers\VaccinationController;
 
 
+
+Route::post('/langue/{locale}', [LangueController::class, 'switch'])->name('langue.switch');
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/services', [PageController::class, 'services'])->name('services');
@@ -81,6 +88,14 @@ Route::middleware(['auth', 'role:patient'])->prefix('patient')->name('patient.')
 
     Route::get('/plaintes', [PatientPlainteController::class, 'index'])->name('plaintes.index');
     Route::post('/plaintes', [PatientPlainteController::class, 'store'])->name('plaintes.store');
+
+    Route::delete('/dossier-medical/{symptome}', [DossierMedicalController::class, 'destroySymptome'])->name('dossier.destroy');
+    Route::delete('/constantes/{constante}', [ConstanteController::class, 'destroy'])->name('constantes.destroy');
+
+    Route::post('/vaccinations', [VaccinationController::class, 'store'])->name('vaccinations.store');
+    Route::delete('/vaccinations/{vaccination}', [VaccinationController::class, 'destroy'])->name('vaccinations.destroy');
+    Route::patch('/dossier-medical/allergies', [DossierMedicalController::class, 'updateAllergies'])->name('dossier.allergies');
+    Route::get('/carnet-sante', [DossierMedicalController::class, 'exportCarnet'])->name('carnet.export');  
 });
 
 Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')->group(function () {
@@ -99,6 +114,7 @@ Route::middleware(['auth', 'role:medecin'])->prefix('medecin')->name('medecin.')
     Route::post('/patients/{patient}/ordonnance', [MedecinOrdonnanceController::class, 'store'])->name('ordonnances.store');
 
     Route::patch('/disponibilite', [MedecinDashboardController::class, 'toggleDisponibilite'])->name('disponibilite.toggle');
+    Route::delete('/rendez-vous/{rdv}/historique', [MedecinRendezVousController::class, 'destroyHistorique'])->name('rendezvous.destroy');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -112,19 +128,27 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/patients', [AdminPatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/{patient}', [AdminPatientController::class, 'show'])->name('patients.show');
 
-    Route::get('/statistiques', fn () => view('dashboards.placeholder', ['title' => 'Statistiques', 'roleSidebar' => 'sidebar-admin', 'active' => 'stats']))->name('statistiques');
-
+    Route::get('/statistiques', [AdminDashboardController::class, 'statistiques'])->name('statistiques');
     Route::get('/paiements', [AdminPaiementController::class, 'index'])->name('paiements.index');
 
     Route::get('/plaintes', [AdminPlainteController::class, 'index'])->name('plaintes.index');
     Route::patch('/plaintes/{plainte}', [AdminPlainteController::class, 'update'])->name('plaintes.update');
+
+    Route::delete('/medecins/{medecin}', [AdminMedecinController::class, 'destroy'])->name('medecins.destroy');
+    Route::get('/patients/{patient}/export', [AdminPatientController::class, 'exportPdf'])->name('patients.export');
 });
 
 Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/hopitaux', fn () => view('dashboards.placeholder', ['title' => 'Hôpitaux', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'hopitaux']))->name('hopitaux.index');
-    Route::get('/administrateurs', fn () => view('dashboards.placeholder', ['title' => 'Administrateurs', 'roleSidebar' => 'sidebar-superadmin', 'active' => 'admins']))->name('admins.index');
+    Route::get('/hopitaux', [SuperAdminHopitalController::class, 'index'])->name('hopitaux.index');
+    Route::get('/hopitaux/creer', [SuperAdminHopitalController::class, 'create'])->name('hopitaux.create');
+    Route::post('/hopitaux', [SuperAdminHopitalController::class, 'store'])->name('hopitaux.store');
+    Route::get('/administrateurs', [SuperAdminAdminController::class, 'index'])->name('admins.index');
+    Route::get('/administrateurs/creer', [SuperAdminAdminController::class, 'create'])->name('admins.create');
+    Route::post('/administrateurs', [SuperAdminAdminController::class, 'store'])->name('admins.store');
+    Route::patch('/administrateurs/{admin}/statut', [SuperAdminAdminController::class, 'toggleActif'])->name('admins.toggle');
+    Route::delete('/administrateurs/{admin}', [SuperAdminAdminController::class, 'destroy'])->name('admins.destroy');
     Route::get('/statistiques', [AdminDashboardController::class, 'statistiques'])->name('statistiques');
     Route::get('/statistiques', [SuperAdminStatistiquesController::class, 'index'])->name('statistiques');
 });
@@ -150,6 +174,10 @@ Route::middleware('auth')->group(function () {
     })->name('salle.attente');
 
     Route::post('/salle/{rdv}/terminer', [ConsultationSalleController::class, 'terminer'])->name('salle.terminer');
+
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications/lues', [NotificationController::class, 'destroyToutLu'])->name('notifications.destroy-lues');
+    Route::post('/profil/photo', [ProfilePhotoController::class, 'update'])->name('profil.photo');
 });
 
 require __DIR__.'/auth.php';

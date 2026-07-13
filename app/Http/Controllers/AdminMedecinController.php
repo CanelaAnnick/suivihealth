@@ -16,7 +16,7 @@ class AdminMedecinController extends Controller
 
     public function index(Request $request)
     {
-        $query = Medecin::with('user');
+        $query = Medecin::with('user')->where('hopital_id', auth()->user()->hopital_id);
 
         if ($request->filled('recherche')) {
             $query->whereHas('user', fn ($q) => $q->where('name', 'like', '%'.$request->recherche.'%'));
@@ -41,11 +41,12 @@ class AdminMedecinController extends Controller
             'specialite' => 'required|string',
             'type' => 'required|in:generaliste,specialiste',
             'region' => 'required|string',
-            'hopital' => 'nullable|string',
             'numero_ordre' => 'required|string|unique:medecins,numero_ordre',
             'telephone' => 'nullable|string',
             'tarif' => 'required|integer|min:0',
         ]);
+
+        $hopital = auth()->user()->hopital;
 
         $user = User::create([
             'name' => $request->name,
@@ -59,20 +60,28 @@ class AdminMedecinController extends Controller
             'specialite' => $request->specialite,
             'type' => $request->type,
             'region' => $request->region,
-            'hopital' => $request->hopital,
+            'hopital' => $hopital?->nom,
+            'hopital_id' => $hopital?->id,
             'numero_ordre' => $request->numero_ordre,
             'telephone' => $request->telephone,
             'tarif' => $request->tarif,
             'statut' => 'actif',
         ]);
 
-        return redirect()->route('admin.medecins.index')->with('status', 'Médecin ajouté. Identifiants : '.$request->email.' — communiquez le mot de passe choisi au médecin.');
+        return redirect()->route('admin.medecins.index')->with('status', 'Médecin ajouté. Identifiants : '.$request->email);
     }
 
     public function toggleStatut(Medecin $medecin)
     {
+        abort_if($medecin->hopital_id !== auth()->user()->hopital_id, 403);
         $medecin->update(['statut' => $medecin->statut === 'actif' ? 'inactif' : 'actif']);
-
         return back()->with('status', 'Statut mis à jour.');
+    }
+
+    public function destroy(Medecin $medecin)
+    {
+        abort_if($medecin->hopital_id !== auth()->user()->hopital_id, 403);
+        $medecin->delete();
+        return redirect()->route('admin.medecins.index')->with('status', 'Médecin retiré de la plateforme.');
     }
 }

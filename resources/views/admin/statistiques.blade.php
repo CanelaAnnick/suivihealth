@@ -8,16 +8,24 @@
 
 @section('content')
 
-<div class="grid md:grid-cols-2 gap-5">
-    <div class="bg-white border border-slate-200 rounded-2xl p-5">
-        <h3 class="text-[13.5px] font-semibold text-slate-900 mb-4">Consultations par semaine (8 dernières semaines)</h3>
-        <canvas id="semaineChart" height="180"></canvas>
+@php $totalConsultations = $consultationsParSemaine->sum('count'); @endphp
+
+@if ($totalConsultations === 0)
+    <div class="bg-white border border-slate-200 rounded-2xl py-16 text-center">
+        <p class="text-[13px] text-slate-400">Aucune consultation enregistrée pour le moment — les statistiques apparaîtront dès les premières consultations.</p>
     </div>
-    <div class="bg-white border border-slate-200 rounded-2xl p-5">
-        <h3 class="text-[13.5px] font-semibold text-slate-900 mb-4">Répartition par spécialité</h3>
-        <canvas id="specialiteChart" height="180"></canvas>
+@else
+    <div class="grid md:grid-cols-2 gap-5">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5">
+            <h3 class="text-[13.5px] font-semibold text-slate-900 mb-4">Consultations par semaine (8 dernières semaines)</h3>
+            <canvas id="semaineChart" height="180"></canvas>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-5">
+            <h3 class="text-[13.5px] font-semibold text-slate-900 mb-4">Répartition par spécialité</h3>
+            <canvas id="specialiteChart" height="180"></canvas>
+        </div>
     </div>
-</div>
+@endif
 
 @endsection
 

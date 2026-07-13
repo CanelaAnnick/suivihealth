@@ -26,4 +26,16 @@ class NotificationController extends Controller
         auth()->user()->appNotifications()->update(['lu' => true]);
         return response()->json(['success' => true]);
     }
+    public function destroy(\App\Models\Notification $notification)
+    {
+        abort_if($notification->user_id !== auth()->id(), 403);
+        $notification->delete();
+        return response()->json(['success' => true]);
+    }
+    
+    public function destroyToutLu()
+    {
+        auth()->user()->appNotifications()->where('lu', true)->delete();
+        return response()->json(['success' => true]);
+    }
 }

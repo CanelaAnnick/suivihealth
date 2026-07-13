@@ -3,8 +3,8 @@
 <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row gap-4 hover:border-teal-300 hover:shadow-md transition">
 
     <div class="flex items-start gap-3.5 flex-1 min-w-0">
-        @if ($medecin->photo)
-            <img src="{{ asset('storage/'.$medecin->photo) }}" class="w-12 h-12 rounded-lg object-cover shrink-0">
+        @if ($medecin->user->photo)
+        <img src="{{ asset('uploads/'.$medecin->user->photo) }}" class="w-12 h-12 rounded-lg object-cover shrink-0">
         @else
             <div class="w-12 h-12 rounded-lg bg-navy-900/5 text-navy-800 flex items-center justify-center font-semibold text-[13px] shrink-0">
                 {{ strtoupper(substr($medecin->user->name, 4, 2)) }}

@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => CheckRole::class,
         ]);
 
+        $middleware->append(\App\Http\Middleware\SetLocale::class);
+
         $middleware->redirectUsersTo(function ($request) {
             return match (auth()->user()->role) {
                 'patient' => route('patient.dashboard'),

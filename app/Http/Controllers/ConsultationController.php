@@ -14,7 +14,10 @@ class ConsultationController extends Controller
 
     public function choix()
     {
-        return view('patient.consultation.choix');
+        $prixGeneraliste = Medecin::where('type', 'generaliste')->where('statut', 'actif')->min('tarif');
+        $prixSpecialiste = Medecin::where('type', 'specialiste')->where('statut', 'actif')->min('tarif');
+    
+        return view('patient.consultation.choix', compact('prixGeneraliste', 'prixSpecialiste'));
     }
 
     public function generalistes(Request $request)

@@ -72,4 +72,11 @@ class MedecinRendezVousController extends Controller
     
         return response()->json(['success' => true]);
     }
+    public function destroyHistorique(RendezVous $rdv)
+    {
+        abort_if($rdv->medecin_id !== auth()->user()->medecin->id, 403);
+        abort_unless(in_array($rdv->statut, ['termine', 'annule']), 403);
+        $rdv->delete();
+        return back()->with('status', 'Entrée supprimée de l\'historique.');
+    }
 }

@@ -10,7 +10,11 @@ class AdminPaiementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = RendezVous::where('statut_paiement', 'paye')->with('medecin.user', 'patient.user');
+        $hopitalId = auth()->user()->hopital_id;
+
+        $query = RendezVous::where('statut_paiement', 'paye')
+            ->whereHas('medecin', fn ($q) => $q->where('hopital_id', $hopitalId))
+            ->with('medecin.user', 'patient.user');
 
         if ($request->filled('medecin_id')) {
             $query->where('medecin_id', $request->medecin_id);
@@ -24,7 +28,7 @@ class AdminPaiementController extends Controller
 
         $transactions = $query->latest('updated_at')->get();
         $totalMontant = $transactions->sum('montant');
-        $medecins = Medecin::with('user')->get();
+        $medecins = Medecin::where('hopital_id', $hopitalId)->with('user')->get();
 
         return view('admin.paiements', compact('transactions', 'totalMontant', 'medecins'));
     }
