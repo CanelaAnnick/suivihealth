@@ -12,10 +12,13 @@
     <div class="w-16 h-16 rounded-full overflow-hidden shrink-0">
         <x-avatar :user="$user" size="w-16 h-16" text="text-[18px]" />
     </div>
-    <form method="POST" action="{{ route('profil.photo') }}" enctype="multipart/form-data" class="flex flex-wrap items-center gap-3">
+    <form method="POST" action="{{ route('profil.photo') }}" enctype="multipart/form-data" class="flex flex-col gap-2">
         @csrf
-        <input type="file" name="photo" accept="image/*" required class="text-[12.5px] text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-medium file:bg-mist file:text-navy-800 hover:file:bg-slate-100">
-        <button type="submit" class="bg-navy-900 text-white text-[12.5px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition shrink-0">Mettre à jour la photo</button>
+        <div class="flex flex-wrap items-center gap-3">
+            <input type="file" name="photo" accept="image/*" required class="text-[12.5px] text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-medium file:bg-mist file:text-navy-800 hover:file:bg-slate-100">
+            <button type="submit" class="bg-navy-900 text-white text-[12.5px] font-medium px-4 py-2 rounded-lg hover:bg-navy-800 transition shrink-0">Mettre à jour la photo</button>
+        </div>
+        @error('photo') <p class="text-red-600 text-[11.5px]">{{ $message }}</p> @enderror
     </form>
 </div>
 

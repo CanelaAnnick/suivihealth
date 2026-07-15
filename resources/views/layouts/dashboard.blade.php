@@ -89,9 +89,7 @@
 
                 <form method="POST" action="{{ route('langue.switch', app()->getLocale() === 'fr' ? 'en' : 'fr') }}">
                     @csrf
-                    <button type="submit" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 transition text-[12px] font-semibold">
-                        {{ app()->getLocale() === 'fr' ? 'EN' : 'FR' }}
-                    </button>
+                    <button type="button" id="langToggleBtn" onclick="toggleLang()" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 transition text-[12px] font-semibold">EN</button>
                 </form>
                 <div class="relative">
                     <button @click="notifOpen = !notifOpen; profileOpen = false" class="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 transition" aria-label="Notifications">
@@ -152,6 +150,8 @@
     </nav>
 
     <x-consultation-modal />
+
+    @include('partials.google-translate')
 
     @stack('scripts')
 </body>

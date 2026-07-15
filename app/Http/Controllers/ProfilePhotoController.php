@@ -3,20 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProfilePhotoController extends Controller
 {
     public function update(Request $request)
     {
-        $request->validate(['photo' => 'required|image|max:2048']);
+        $request->validate([
+            'photo' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
 
-        if (auth()->user()->photo) {
-            Storage::disk('public')->delete(auth()->user()->photo);
+        $destination = public_path('uploads/photos');
+        if (! is_dir($destination)) {
+            mkdir($destination, 0777, true);
         }
 
-        $path = $request->file('photo')->store('photos', 'public');
-        auth()->user()->update(['photo' => $path]);
+        // Supprime l'ancienne photo si elle existe
+        if (auth()->user()->photo && file_exists(public_path('uploads/'.auth()->user()->photo))) {
+            unlink(public_path('uploads/'.auth()->user()->photo));
+        }
+
+        $file = $request->file('photo');
+        $filename = uniqid('photo_').'.'.$file->getClientOriginalExtension();
+        $file->move($destination, $filename);
+
+        auth()->user()->update(['photo' => 'photos/'.$filename]);
 
         return back()->with('status', 'Photo de profil mise à jour.');
     }

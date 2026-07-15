@@ -10,5 +10,6 @@
 </head>
 <body class="font-sans text-navy-900 antialiased bg-mist min-h-screen overflow-x-hidden">
     @yield('content')
+    @include('partials.google-translate')
 </body>
 </html>

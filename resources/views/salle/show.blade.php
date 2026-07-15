@@ -99,6 +99,7 @@
                             <p class="text-center text-[13px] text-slate-400 py-10">Aucun message pour le moment. Démarrez la conversation.</p>
                         </template>
                     </div>
+                    <p x-show="erreur" x-cloak x-text="erreur" class="text-[11.5px] text-red-600 px-3 pb-2"></p>
                     <form @submit.prevent="envoyer()" class="border-t border-slate-100 p-3 flex gap-2">
                         <input type="text" x-model="texte" placeholder="Écrire un message..." class="flex-1 rounded-lg border-slate-200 text-[13px] focus:border-navy-800 focus:ring-navy-800">
                         <button type="submit" class="bg-navy-900 text-white px-4 rounded-lg hover:bg-navy-800 transition">
@@ -118,24 +119,37 @@
 <script>
     function chatSalle(rdvId, userId) {
         return {
-            messages: [], texte: '', userId: userId,
+            messages: [], texte: '', userId: userId, erreur: null,
             csrf() { return document.querySelector('meta[name="csrf-token"]').content },
             async load() {
-                const res = await fetch(`/salle/${rdvId}/messages`);
-                this.messages = await res.json();
-                this.$nextTick(() => { this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight });
+                try {
+                    const res = await fetch(`/salle/${rdvId}/messages`, { cache: 'no-store' });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    this.messages = await res.json();
+                    this.$nextTick(() => { this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight });
+                } catch (e) {
+                    console.error('Erreur chargement messages :', e);
+                }
             },
             async envoyer() {
                 if (!this.texte.trim()) return;
-                const res = await fetch(`/salle/${rdvId}/messages`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': this.csrf() },
-                    body: JSON.stringify({ contenu: this.texte }),
-                });
-                const msg = await res.json();
-                this.messages.push(msg);
-                this.texte = '';
-                this.$nextTick(() => { this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight });
+                this.erreur = null;
+                try {
+                    const res = await fetch(`/salle/${rdvId}/messages`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': this.csrf() },
+                        cache: 'no-store',
+                        body: JSON.stringify({ contenu: this.texte }),
+                    });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const msg = await res.json();
+                    this.messages.push(msg);
+                    this.texte = '';
+                    this.$nextTick(() => { this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight });
+                } catch (e) {
+                    console.error('Erreur envoi message :', e);
+                    this.erreur = "Le message n'a pas pu être envoyé.";
+                }
             },
         }
     }
