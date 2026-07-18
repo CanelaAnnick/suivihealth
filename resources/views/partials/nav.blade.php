@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-50 bg-abyss-900/90 backdrop-blur border-b border-white/5" x-data="{ open: false }">
+<header class="fixed top-0 inset-x-0 z-50 h-20 bg-abyss-900/95 backdrop-blur border-b border-white/5" x-data="{ open: false }">
     <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <a href="{{ route('home') }}" class="flex items-center">
             <x-logo class="h-10" />

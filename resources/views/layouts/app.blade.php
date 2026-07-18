@@ -10,7 +10,7 @@
 </head>
 <body class="font-sans text-slate-900 antialiased" x-data>
     @include('partials.nav')
-    <main>
+    <main class="pt-20">
         @yield('content')
     </main>
     @include('partials.footer')
