@@ -9,7 +9,7 @@ class Medecin extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'specialite', 'type', 'region', 'hopital', 'photo', 'tarif', 'numero_ordre', 'telephone', 'statut', 'disponible_immediat'];
+    protected $fillable = ['user_id', 'specialite', 'type', 'region', 'hopital', 'hopital_id', 'photo', 'tarif', 'numero_ordre', 'telephone', 'statut', 'disponible_immediat'];
 
     protected $casts = ['disponible_immediat' => 'boolean'];
 
