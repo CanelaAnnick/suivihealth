@@ -29,6 +29,8 @@ use App\Http\Controllers\SuperAdminAdminController;
 use App\Http\Controllers\ProfilePhotoController;
 use App\Http\Controllers\LangueController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\ProfileController;
+
 
 
 
