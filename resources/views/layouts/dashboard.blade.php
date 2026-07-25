@@ -13,9 +13,7 @@
 
     <aside class="hidden md:flex md:flex-col fixed left-0 top-0 h-screen w-[252px] bg-navy-900 z-40">
         <div class="flex items-center px-5 h-20 border-b border-white/10 shrink-0">
-            <div class="bg-white rounded-xl px-3.5 py-2.5 shadow-sm">
-                <x-logo class="h-10" />
-            </div>
+            <x-logo-mark size="h-10" textSize="text-[19px]" />
         </div>
 
         <nav class="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
@@ -52,7 +50,12 @@
             ">
 
             <div class="flex items-center gap-3 min-w-0">
-                <h1 class="font-semibold text-[15.5px] text-slate-900 truncate">@yield('page-title', 'Tableau de bord')</h1>
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="md:hidden shrink-0">
+                        <x-logo-mark size="h-7" textSize="text-[15px]" textColor="text-navy-900" />
+                    </div>
+                    <h1 class="hidden md:block font-semibold text-[15.5px] text-slate-900 truncate">@yield('page-title', 'Tableau de bord')</h1>
+                </div>
             </div>
 
             <div class="flex items-center gap-3 shrink-0">
