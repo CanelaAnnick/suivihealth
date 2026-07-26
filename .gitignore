@@ -21,6 +21,9 @@
 /storage/*.key
 /storage/pail
 /vendor
+/public/uploads
+/storage/app/public/*
+!/storage/app/public/.gitignore
 _ide_helper.php
 Homestead.json
 Homestead.yaml
