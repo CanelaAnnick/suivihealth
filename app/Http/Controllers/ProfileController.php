@@ -1,14 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
 class ProfileController extends Controller
 {
     /**
@@ -16,12 +13,9 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        if (auth()->user()->role === 'patient') {
-            $rendezVous = auth()->user()->patient->rendezVous()->with('medecin.user')->latest('created_at')->get();
-            return view('patient.profil', ['user' => $request->user(), 'rendezVous' => $rendezVous]);
-        }
-    
-        return view('profile.edit-simple', ['user' => $request->user()]);
+        return view('profile.edit-simple', [
+            'user' => $request->user(),
+        ]);
     }
 
     /**
@@ -30,13 +24,10 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
-
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
-
         $request->user()->save();
-
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
@@ -48,16 +39,11 @@ class ProfileController extends Controller
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
-
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return Redirect::to('/');
     }
 }

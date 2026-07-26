@@ -9,11 +9,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('medecins', function (Blueprint $table) {
-            $table->foreignId('hopital_id')->nullable()->after('hopital')->constrained()->nullOnDelete();
-        });
+$table->foreignId('hopital_id')
+      ->nullable()
+      ->after('hopital')
+      ->constrained('hopitaux')
+      ->nullOnDelete();        });
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('hopital_id')->nullable()->after('role')->constrained()->nullOnDelete();
-        });
+$table->foreignId('hopital_id')
+      ->nullable()
+      ->after('role')
+      ->constrained('hopitaux')
+      ->nullOnDelete();        });
     }
 
     public function down(): void

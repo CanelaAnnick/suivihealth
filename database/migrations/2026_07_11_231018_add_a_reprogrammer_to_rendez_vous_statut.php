@@ -1,17 +1,26 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE rendez_vous MODIFY statut ENUM('en_attente','confirme','annule','termine','a_reprogrammer') DEFAULT 'en_attente'");
+        Schema::table('rendez_vous', function (Blueprint $table) {
+            $table->string('statut')
+                ->default('en_attente')
+                ->change();
+        });
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE rendez_vous MODIFY statut ENUM('en_attente','confirme','annule','termine') DEFAULT 'en_attente'");
+        Schema::table('rendez_vous', function (Blueprint $table) {
+            $table->string('statut')
+                ->default('en_attente')
+                ->change();
+        });
     }
 };

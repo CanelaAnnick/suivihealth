@@ -8,25 +8,28 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('publications', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('rendez_vous_id')
-                  ->constrained('rendez_vous')
-                  ->cascadeOnDelete();
-
-            $table->foreignId('sender_id')
+            $table->foreignId('auteur_id')
                   ->constrained('users')
                   ->cascadeOnDelete();
 
+            $table->string('titre')->nullable();
             $table->text('contenu');
+            $table->string('categorie')->nullable();
+
+            $table->enum('statut', [
+                'publie',
+                'brouillon'
+            ])->default('publie');
+
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('publications');
     }
 };
-

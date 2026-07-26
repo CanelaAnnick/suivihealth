@@ -29,8 +29,17 @@ use App\Http\Controllers\SuperAdminAdminController;
 use App\Http\Controllers\ProfilePhotoController;
 use App\Http\Controllers\LangueController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\ChatbotController;
 
 
+Route::get('/test-auth', function () {
+    return [
+        'auth' => auth()->check(),
+        'id' => auth()->id(),
+        'user' => auth()->user(),
+    ];
+})->middleware('auth');
 
 Route::post('/langue/{locale}', [LangueController::class, 'switch'])->name('langue.switch');
 
@@ -179,5 +188,71 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifications/lues', [NotificationController::class, 'destroyToutLu'])->name('notifications.destroy-lues');
     Route::post('/profil/photo', [ProfilePhotoController::class, 'update'])->name('profil.photo');
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/communaute', [PublicationController::class, 'index'])->name('communaute.index');
+
+
+ Route::middleware(['role:admin,medecin'])->group(function () {
+        Route::get('/communaute/creer', [PublicationController::class, 'creer'])->name('communaute.creer');
+        Route::post('/communaute', [PublicationController::class, 'stocker'])->name('communaute.stocker');
+    });
+
+
+    Route::get('/communaute/{publication}', [PublicationController::class, 'afficher'])->name('communaute.afficher');
+    Route::post('/communaute/{publication}/commentaires', [PublicationController::class, 'commenter'])->name('communaute.commenter');
+
+   
+    Route::delete('/communaute/{publication}', [PublicationController::class, 'supprimer'])->name('communaute.supprimer');
+});
+
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/assistant', [ChatbotController::class, 'index'])
+        ->name('chatbot.index');
+
+    Route::post('/assistant/envoyer', [ChatbotController::class, 'envoyer'])
+        ->name('chatbot.envoyer');
+
+});
+
+Route::get('/debug-tables', function () {
+    return response()->json([
+        'publications' => \Schema::hasTable('publications') ? \Schema::getColumnListing('publications') : 'table absente',
+        'commentaires' => \Schema::hasTable('commentaires') ? \Schema::getColumnListing('commentaires') : 'table absente',
+    ]);
+});
+
+
+Route::middleware('auth')->get('/dashboard', function () {
+
+    $user = auth()->user();
+
+    switch ($user->role) {
+
+        case 'patient':
+            return redirect()->route('patient.dashboard');
+
+        case 'medecin':
+            return redirect()->route('medecin.dashboard');
+
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+
+        case 'superadmin':
+            return redirect()->route('superadmin.dashboard');
+
+        default:
+            abort(403);
+    }
+
+})->name('dashboard');
+
+
+
+
+
 
 require __DIR__.'/auth.php';
