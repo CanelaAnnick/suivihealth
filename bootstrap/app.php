@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => CheckRole::class,
         ]);
 
+        $middleware->trustProxies(at: '*');
+        
         $middleware->append(\App\Http\Middleware\SetLocale::class);
 
         $middleware->redirectUsersTo(function ($request) {

@@ -70,7 +70,7 @@
                     <p class="text-slate-500 text-[13px] mb-6 max-w-sm mx-auto">La salle s'ouvre dans un nouvel onglet pour garantir une connexion caméra/micro fiable.</p>
 
                     <button type="button" @click="
-                    let w = window.open('https://meet.jit.si/suivihealth-{{ $rdv->salle_id }}#config.startWithVideoMuted={{ $rdv->mode === 'audio' ? 'true' : 'false' }}&userInfo.displayName=%22{{ rawurlencode(auth()->user()->name) }}%22', '_blank');
+                    let w = window.open('https://meet.jit.si/suivihealth-{{ $rdv->salle_id }}#config.startWithVideoMuted={{ $rdv->mode === 'audio' ? 'true' : 'false' }}&config.startWithAudioMuted=false&config.prejoinPageEnabled=false&config.requireDisplayName=false&userInfo.displayName=%22{{ rawurlencode(auth()->user()->name) }}%22&config.disableDeepLinking=true');
                     if (!w) { alert('Votre navigateur a bloqué l\'ouverture de la salle. Autorisez les pop-ups pour ce site puis réessayez.'); return; }
                     joined = true;
                     let check = setInterval(() => {
